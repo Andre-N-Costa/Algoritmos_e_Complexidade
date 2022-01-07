@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 // 1 - MIN-HEAPS
-/*
+
 #define Max 100
 #define left(i) (2*i+1)
 #define right(i) (2*i+2)
@@ -79,14 +79,14 @@ int remv (PriorityQueue *q, int *rem){
     return 0;
 }
 //5.
-void heapSort(PriorityQueue *q, int N){   //errado
+void heapSort(PriorityQueue *q, int N){  
 
 }
- */
+
 
 //2 - TABELAS DE HASH
 
-/*
+
 unsigned hash(char *str){
     unsigned hash = 5381;
     int c;
@@ -109,7 +109,7 @@ void initEmpty (THash t){
 }
 
 //2.
-void addH (char *s, THash t){
+void addH1 (char *s, THash t){
     int h = hash(s) % Size;
     Nodo *temp = t[h];
     while (temp && strcmp(s,temp->chave)){
@@ -137,7 +137,7 @@ int lookup (char *s, THash t){
 }
 
 //4.
-int removeH (char *s, THash t){
+int removeH1 (char *s, THash t){
     int h = hash(s) % Size;
     Nodo *temp = t[h], *ant = NULL;
     while (temp && strcmp(s,temp->chave)){
@@ -213,10 +213,10 @@ int removeH (char *s, THash t){
     t[h].status = 2;
     return 0;
 }
-*/
+
 
 // MAIN -------------------------------------------------------
-/*
+
 int main(){
 
     int minheap[Max];
@@ -228,7 +228,7 @@ int main(){
         minheap[i] = x;
         i++;
     }
-*/
+
     /*----------TESTE BUBBLEUP-----------
     minheap[i - 1] = 13;
     minheap[i] = -1;
