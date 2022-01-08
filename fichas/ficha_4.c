@@ -12,7 +12,7 @@ void printM (GrafoM g){
     int i,j;
     long value;
     for(i = 0; i < NV; i++){
-        printf("%d -> ",i + 1);
+        printf("%d -> ",i);
         for(j = 0; j < NV;j++){
             value = g[i][j];
             printf("%ld ",value);
@@ -24,7 +24,7 @@ void printM (GrafoM g){
 void printL(GrafoL g){
     LAdj aux;
     for(int i = 0; i < NV; i++){
-        printf("%d -> ",i + 1);
+        printf("%d -> ",i);
         aux = g[i];
         while(aux){
             printf("%d ",aux->dest);
@@ -39,7 +39,7 @@ void fromMat (GrafoM in, GrafoL out){
     for(int i = NV - 1;i >= 0; i--){
         out[i] = NULL;
         for(int j = NV - 1;j >= 0; j--){
-            if (in[i][j] != 0) {
+            if (in[i][j] != -1) {
                 aux = malloc(sizeof(struct aresta));
                 aux->custo = 1;
                 aux->dest = in[i][j];
@@ -61,8 +61,8 @@ void inverte (GrafoL in, GrafoL out){
             new = malloc(sizeof(struct aresta));
             new->dest = i + 1;
             new->custo = 1;
-            new->prox = out[aux->dest - 1];
-            out[aux->dest - 1] = new;
+            new->prox = out[aux->dest];
+            out[aux->dest] = new;
             aux = aux->prox;
         }
     }
@@ -71,7 +71,7 @@ void inverte (GrafoL in, GrafoL out){
 int inDegree (GrafoL g) {
     LAdj aux;
     int m[NV+1],maior = 0;
-    for (int j = 0; j < NV+1; j++) {
+    for (int j = 0; j < NV; j++) {
         m[j] = 0;
     }
     for (int i = 0; i < NV; i++) {
@@ -81,23 +81,127 @@ int inDegree (GrafoL g) {
             aux = aux->prox;
         }
     }
-    for(int n = 1; n < NV + 1; n++){
+    for(int n = 0; n < NV; n++){
         if (m[n] > maior) maior = m[n];
     }
 return maior;
 }
 
+int colorOK (GrafoL g, int cor[]){
+    LAdj aux;
+    for(int i = 0; i < NV; i++){
+        aux = g[i];
+        while(aux){
+            if (cor[(aux->dest)] == cor[i]) return -1;
+            aux = aux->prox;
+        }
+    }
+    return 0;
+}
+
+int homomorfOK (GrafoL g, GrafoL h, int f[]){
+    LAdj aux;
+    LAdj aux2;
+    for(int i = 0; i < NV; i++){
+        while (aux && aux2){
+            if (f[aux->dest] != f[aux2->dest]) return -1;
+            aux = aux->prox;
+            aux2 = aux2->prox;
+        }
+    }
+    return 0;
+}
+
+//TRAVESSIAS-------------------------------------------------------------------
+
+int DFRec (GrafoL g, int or,int v[],int p[],int l[]){
+    int i; LAdj aux;
+    i=1;
+    v[or]=-1;
+    for (aux=g[or];aux!=NULL;aux=aux->prox)
+        if (!v[aux->dest]){
+            p[aux->dest] = or;
+            l[aux->dest] = 1+l[or];
+            i+=DFRec(g,aux->dest,v,p,l);
+        }
+    v[or]=1;
+    return i;
+}
+
+int DF (GrafoL g, int or,int v[],int p[],int l[]){
+    int i;
+    for (i=0; i<NV; i++) {
+        v[i]=0;
+        p[i] = -1;
+        l[i] = -1;
+    }
+    p[or] = -1; l[or] = 0;
+    return DFRec (g,or,v,p,l);
+}
+
+int BF (GrafoL g, int or,int v[],int p[],int l[]){
+    int i, x; LAdj a;
+    int q[NV], front, end;
+    for (i=0; i<NV; i++) {
+        v[i]=0;
+        p[i] = -1;
+        l[i] = -1;
+    }
+    front = end = 0;
+    q[end] = or; //enqueue
+    end++;
+    v[or] = 1; p[or]=-1;l[or]=0;
+    i=1;
+    while (front != end){
+        x = q[front]; //dequeue
+        front++;
+        for (a=g[x]; a!=NULL; a=a->prox)
+            if (!v[a->dest]){
+                i++;
+                v[a->dest]=1;
+                p[a->dest]=x;
+                l[a->dest]=1+l[x];
+                q[end]=a->dest; //enqueue
+                end++;
+            }
+    }
+    return i;
+}
+
+int maisLonga (GrafoL g, int or, int p[]){
+    int v[NV];
+    int l[NV];
+    int pai[NV];
+    int j = 0;
+    int i;
+    int m = BF(g,or,v,pai,l);
+    for(i = 0; i < NV; i++){
+        if (l[i] > l[j]) j = i;
+    }
+    i = j;
+    p[l[j]] = j;
+    for(int aux = l[j] - 1 ; pai[j] != -1; aux--){
+        p[aux] = pai[j];
+        j = pai[j];
+    }
+return i;
+}
+
 int main() {
-    GrafoM grafom[NV][NV] = {2,0,0,0,
-                             3,4,0,0,
-                             4,0,0,0,
-                             1,0,0,0};
+    GrafoM grafom[NV][NV] = {1,3,-1,-1,
+                             0,2,3,-1,
+                             1,3,-1,-1,
+                             0,1,2,-1};
     GrafoL grafol[NV];
     GrafoL grafol2[NV];
+    int cor[NV] = {1,1,1,3};
+    int p[NV];
     fromMat(**grafom, *grafol);
     printL(*grafol);
-    inverte(*grafol,*grafol2);
     printf("\n");
-    printf("degree : %d",inDegree(*grafol));
+    maisLonga(*grafol,0,p);
+    for(int i = 0; i < 3; i++){
+        printf("%d,",p[i]);
+    }
     return 0;
 }
