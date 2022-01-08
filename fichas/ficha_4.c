@@ -169,11 +169,7 @@ int BF (GrafoL g, int or,int v[],int p[],int l[]){
 }
 
 int maisLonga (GrafoL g, int or, int p[]){
-    int v[NV];
-    int l[NV];
-    int pai[NV];
-    int j = 0;
-    int i;
+    int v[NV],l[NV],pai[NV],i,j = 0;
     int m = BF(g,or,v,pai,l);
     for(i = 0; i < NV; i++){
         if (l[i] > l[j]) j = i;
@@ -187,11 +183,33 @@ int maisLonga (GrafoL g, int or, int p[]){
 return i;
 }
 
+int componentes (GrafoL g, int c[]){
+    int v[NV],l[NV],pai[NV],count, o = 0;
+    BF(g,o,c,pai,l);
+    count = 1;
+    while (o < NV) {
+        for (o = 0; o < NV && c[o] != 0; o++)
+            ;
+        if (o < NV) {
+            BF(g,o,v,pai,l);
+            count++;
+            for(int i = 0; i < NV;i++){
+                if (v[i]) c[i] = count;
+            }
+        }
+    }
+return count;
+}
+
+int ordTop (GrafoL g, int ord[]){
+
+}
+
 int main() {
-    GrafoM grafom[NV][NV] = {1,3,-1,-1,
-                             0,2,3,-1,
-                             1,3,-1,-1,
-                             0,1,2,-1};
+    GrafoM grafom[NV][NV] = {1,-1,-1,-1,
+                             2,-1,-1,-1,
+                             3,-1,-1,-1,
+                             -1,-1,-1,-1};
     GrafoL grafol[NV];
     GrafoL grafol2[NV];
     int cor[NV] = {1,1,1,3};
@@ -199,9 +217,5 @@ int main() {
     fromMat(**grafom, *grafol);
     printL(*grafol);
     printf("\n");
-    maisLonga(*grafol,0,p);
-    for(int i = 0; i < 3; i++){
-        printf("%d,",p[i]);
-    }
     return 0;
 }
