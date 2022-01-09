@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define NV 4
+#define NV 7
 typedef struct aresta {
     int dest; int custo;
     struct aresta *prox;
@@ -202,20 +202,51 @@ return count;
 }
 
 int ordTop (GrafoL g, int ord[]){
-
+int vis[NV], pai[NV], l[NV],or = 0,count = 1,bk;
+LAdj aux;
+BF(g,or,vis,pai,l);
+for(int i = 0; i < NV ;i++){
+    if (pai[i] == -1) {
+        ord[0] = i;
+        pai[i] = -2;
+    }
+}
+for(int m = 1; m < NV; m++){
+    bk = 1;
+    for(int n = 0;n < NV && bk ;n++){
+        if ((pai[pai[n]]) == -2){
+            pai[n] = -2;
+            ord[m] = n;
+            bk = 0;
+        }
+    }
+}
+return 0;
 }
 
 int main() {
-    GrafoM grafom[NV][NV] = {1,-1,-1,-1,
-                             2,-1,-1,-1,
-                             3,-1,-1,-1,
-                             -1,-1,-1,-1};
+    GrafoM grafom[NV][NV] = {1,-1,-1,-1,-1,-1,-1,
+                             2,-1,-1,-1,-1,-1,-1,
+                             3,-1,-1,-1,-1,-1,-1,
+                             4,-1,-1,-1,-1,-1,-1,
+                             5,-1,-1,-1,-1,-1,-1,
+                             6,-1,-1,-1,-1,-1,-1,
+                             -1,-1,-1,-1,-1,-1,-1};
     GrafoL grafol[NV];
     GrafoL grafol2[NV];
     int cor[NV] = {1,1,1,3};
     int p[NV];
+    for(int i = 0; i < NV; i++){
+        p[i] = -1;
+    }
     fromMat(**grafom, *grafol);
     printL(*grafol);
     printf("\n");
+    ordTop(*grafol,p);
+    printf("[");
+    for(int i = 0; i < NV && p[i] != -1; i++){
+        printf("%d,",p[i]);
+    }
+    printf("]");
     return 0;
 }
