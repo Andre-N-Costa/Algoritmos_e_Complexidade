@@ -79,8 +79,29 @@ int remv (PriorityQueue *q, int *rem){
     return 0;
 }
 //5.
-void heapSort(PriorityQueue *q, int N){  
 
+void heapifyBU (int v[], int N){
+    for(int i = 0; i < N; i++){
+        if ((right(v[i]) || left(v[i]))) bubbleDown(v[i],v,N);
+    }
+}
+//complexidade : log(N)
+
+void heapifyTD(int v[], int N){
+    for(int i = N - 1; i > 0; i--){
+        bubbleUp(v[i],v);
+    }
+}
+//complexidade : log(N)
+
+void ordenaHeap (int h[], int N) {
+    printmh(h);
+    for (int i = N-1; i > 0; i--) {
+        swap(h, 0, i);
+        bubbleDown(0, h, i-1);
+        printf("\n");
+        printmh(h);
+    }
 }
 
 
@@ -96,7 +117,7 @@ unsigned hash(char *str){
 }
 
 //2.1 - CHAINING
-
+/*
 #define Size 100
 typedef struct nodo {
     char *chave; int ocorr;
@@ -109,7 +130,7 @@ void initEmpty (THash t){
 }
 
 //2.
-void addH1 (char *s, THash t){
+void addH (char *s, THash t){
     int h = hash(s) % Size;
     Nodo *temp = t[h];
     while (temp && strcmp(s,temp->chave)){
@@ -137,7 +158,7 @@ int lookup (char *s, THash t){
 }
 
 //4.
-int removeH1 (char *s, THash t){
+int removeH (char *s, THash t){
     int h = hash(s) % Size;
     Nodo *temp = t[h], *ant = NULL;
     while (temp && strcmp(s,temp->chave)){
@@ -155,7 +176,7 @@ int removeH1 (char *s, THash t){
     }
     return 0;
 }
-
+*/
 
 //2.2 - OPEN ADDRESSING
 
@@ -185,13 +206,13 @@ int where (char *s, THash t){
     }
 }
 
-void initEmpty (THash t){
+void initEmpty1 (THash t){
     for(int i = 0; i < Size; i++){
         t[i].status == 0;
     }
 }
 
-int addH (char *s, THash t){
+int addH1 (char *s, THash t){
     int h = where(s,t);
     if (t[h].status == 1 && !strcmp(s,t[h].chave)) {t[h].ocorr++;return 0;}
     if (t[h].status == 1) return 1;
@@ -201,13 +222,13 @@ int addH (char *s, THash t){
 return 0;
 }
 
-int lookup (char *s, THash t){
+int lookup1 (char *s, THash t){
     int h = where(s,t);
     if (t[h].status == 1 && strcmp(s,t[h].chave)) return 0;
     return t[h].ocorr;
 }
 
-int removeH (char *s, THash t){
+int removeH1 (char *s, THash t){
     int h = where(s,t);
     if (t[h].status == 1 && strcmp(s,t[h].chave)) return 1;
     t[h].status = 2;
@@ -253,7 +274,6 @@ int main(){
     int r;
     remv(&heap, &r);
      */
-    /*----------TESTE HEAPSORT------------
-
-    */
+    /*----------TESTE HEAPSORT------------*/
+    ordenaHeap(minheap,7);
 }
