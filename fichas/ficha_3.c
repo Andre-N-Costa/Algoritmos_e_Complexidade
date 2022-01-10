@@ -117,7 +117,7 @@ unsigned hash(char *str){
 }
 
 //2.1 - CHAINING
-/*
+
 #define Size 100
 typedef struct nodo {
     char *chave; int ocorr;
@@ -176,7 +176,7 @@ int removeH (char *s, THash t){
     }
     return 0;
 }
-*/
+
 
 //2.2 - OPEN ADDRESSING
 
