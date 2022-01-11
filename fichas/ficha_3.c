@@ -235,6 +235,12 @@ int removeH1 (char *s, THash t){
     return 0;
 }
 
+int garb_collection (THash t){
+    for(int i = 0; i < Size;i++){
+        if (t[i].status == 2) t[i].status = 0;
+    }
+return 0;
+}
 
 // MAIN -------------------------------------------------------
 
@@ -249,6 +255,7 @@ int main(){
         minheap[i] = x;
         i++;
     }
+    
 
     /*----------TESTE BUBBLEUP-----------
     minheap[i - 1] = 13;
