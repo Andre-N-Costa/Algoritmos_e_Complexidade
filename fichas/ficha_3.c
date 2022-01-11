@@ -85,14 +85,14 @@ void heapifyBU (int v[], int N){
         if ((right(v[i]) || left(v[i]))) bubbleDown(v[i],v,N);
     }
 }
-//complexidade : log(N)
+//complexidade : Nlog(N)
 
 void heapifyTD(int v[], int N){
     for(int i = N - 1; i > 0; i--){
         bubbleUp(v[i],v);
     }
 }
-//complexidade : log(N)
+//complexidade : Nlog(N)
 
 void ordenaHeap (int h[], int N) {
     printmh(h);
