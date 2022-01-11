@@ -235,9 +235,28 @@ int removeH1 (char *s, THash t){
     return 0;
 }
 
+void copy(char *key,int times, THash t){
+    int pos;
+    for(pos = where(key,t); t[pos].status == 1; pos = (pos + 1) % Size)
+        ;
+        strcpy(t[pos].chave, key);
+        t[pos].ocorr = times;
+        t[pos].status = 1;
+}
+
 int garb_collection (THash t){
+    char *keys[Size];
+    int pos = 0,times[Size];
     for(int i = 0; i < Size;i++){
-        if (t[i].status == 2) t[i].status = 0;
+        if (t[i].status == 1) {
+            strcpy(keys[pos], t[i].chave);
+            times[pos] = t[i].ocorr;
+            pos++;
+        }
+    }
+    initEmpty1(t);
+    for(int i = 0; i < pos; i++){
+        copy(keys[i],times[i],t);
     }
 return 0;
 }
